@@ -2,61 +2,71 @@
 import Image from "next/image";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { RoundedBox, CameraControls, Environment, useGLTF, ContactShadows, 
-  PerspectiveCamer, axesHelper, KeyboardControls, useKeyboardControls, Box} from "@react-three/drei";
-import { Suspense, useEffect, useState, useRef } from "react";
+  KeyboardControls } from "@react-three/drei";
+import { Suspense, useState, useRef } from "react";
 import ClawCamera from "@/component/ClawCamera";
+import LoginModal from "@/component/LoginModel";
 
-
-function ClawModel({clawPos}){
+function ClawModel({clawPos, isClawDown}){
   const clawModel = useGLTF(`claw.glb`);
   const clawRef = useRef();
 
   useFrame(()=>{
     if(clawRef.current){
       clawRef.current.traverse((child)=>{
-
         if(child.name == "claw"){
-          child.position.set(clawPos.x, clawPos.y+2.85, clawPos.z);
+          child.position.set(clawPos.x, clawPos.y + 2.85, clawPos.z);
         }
-
         if(child.name == "clawBase"){
           child.position.set(clawPos.x, 2.85, clawPos.z);
         }
-
         if(child.name == "track"){
-          child.position.set(clawPos.x, clawPos.y+2.85, clawPos.z);
+          child.position.set(0, 2.85, clawPos.z);
         }
-
       });
     }
   });
 
-  return (<>
+  return (
     <primitive
-      ref = {clawRef}
+      ref={clawRef}
       object={clawModel.scene}
       scale={[0.6, 0.6, 0.6]}
-      position={[clawPos.x, clawPos.y, clawPos.z]}
+      position={[0, 0, 0]}
       rotation={[0, 0, 0]}
     />
-  </>)
-  
+  );
 }
 
-
-
-
 export default function Home() {
-
-  const isHidden = true;
-
   const [clawPos, setClawPos] = useState({x: 0, y: 0, z: 0});
-  const [isCLawDown, setIsClawDown] = useState(false);
-  
+  const [isClawDown, setIsClawDown] = useState(false);
 
+  // 登入相關狀態
+  const [user, setUser] = useState(null);
+  const [showLogin, setShowLogin] = useState(true);  // 一開始就顯示登入視窗
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen relative">
+
+      {/* 如果尚未登入，顯示登入視窗 */}
+      {showLogin && (
+        <LoginModal
+          onClose={() => setShowLogin(false)}
+          onLoginSuccess={(user) => {
+            setUser(user);
+            setShowLogin(false);
+          }}
+        />
+      )}
+
+      {/* 登入成功後顯示歡迎訊息 */}
+      {user && (
+        <div className="absolute top-4 left-4 z-50 bg-white bg-opacity-80 rounded p-2 text-black font-semibold">
+          歡迎，{user.displayName}！
+        </div>
+      )}
+
       <KeyboardControls
         map={[
           { name: "forward", keys: ["ArrowUp", "w", "W"] },
@@ -70,28 +80,10 @@ export default function Home() {
           <ambientLight intensity={Math.PI / 2} />
           <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} decay={0} intensity={Math.PI} />
           <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} />
-          
-
-          {
-            !isHidden && <RoundedBox
-              args={[1, 1, 1]} // Width, height, depth. Default is [1, 1, 1]
-              radius={0.05} // Radius of the rounded corners. Default is 0.05
-              smoothness={4} // The number of curve segments. Default is 4
-              bevelSegments={4} // The number of bevel segments. Default is 4, setting it to 0 removes the bevel, as a result the texture is applied to the whole geometry.
-              creaseAngle={0.4} // Smooth normals everywhere except faces that meet at an angle greater than the crease angle
-            >
-              <meshPhongMaterial color="#f3f3f3"/>
-            </RoundedBox>
-          }
-
-
-          <Box args={[1, 1, 1]}></Box>
-
 
           <Suspense fallback={null}>
-            <ClawModel clawPos={clawPos} />
+            <ClawModel clawPos={clawPos} isClawDown={isClawDown} />
           </Suspense>
-
 
           <Environment
             background={true}
@@ -99,16 +91,12 @@ export default function Home() {
             backgroundIntensity={1}
             environmentIntensity={1}
             preset={'city'}
-          /> 
+          />
 
           <ContactShadows opacity={1} scale={10} blur={10} far={10} resolution={256} color="#DDDDDD" />
 
-          
-          <ClawCamera clawPos={clawPos} setClawPos={setClawPos} isCLawDown={isCLawDown} setIsClawDown={setIsClawDown}/>
+          <ClawCamera clawPos={clawPos} setClawPos={setClawPos} isClawDown={isClawDown} setIsClawDown={setIsClawDown} />
           <CameraControls />
-          <axesHelper args={[10]} />
-
-
         </Canvas>
       </KeyboardControls>
     </div>
