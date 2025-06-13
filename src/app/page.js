@@ -5,6 +5,7 @@ import { Suspense, useState, useRef, useEffect } from "react";
 import ClawCamera from "@/component/ClawCamera";
 import LoginModal from "@/component/LoginModel";
 import WinPopup from "@/component/WinPopup";
+import ExpandableCard from "@/component/ExpandableCard";
 
 function ClawModel({clawPos, isClawDown, isWin}){
   const clawModel = useGLTF(`claw.glb`);
@@ -91,6 +92,7 @@ export default function Home() {
         </div>
       )}
 
+      <ExpandableCard />
 
       <KeyboardControls
         map={[
