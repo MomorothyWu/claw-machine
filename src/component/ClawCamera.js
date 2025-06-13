@@ -4,7 +4,7 @@ import { PerspectiveCamera, useKeyboardControls } from "@react-three/drei";
 import gsap from "gsap";
 
 
-function ClawCamera({clawPos, setClawPos, isClawDown, setIsClawDown}){
+function ClawCamera({clawPos, setClawPos, isClawDown, setIsClawDown, setIsWin }){
     const camRef = useRef();
 
     const [, getKeys] = useKeyboardControls();
@@ -38,26 +38,32 @@ function ClawCamera({clawPos, setClawPos, isClawDown, setIsClawDown}){
             }
     
             if(left){
-                if(clawPos.x > -limitX){
-                    setClawPos({x:clawPos.x - speed, y:clawPos.y, z:clawPos.z});
-                }
+              if(clawPos.x > -limitX){
+                  setClawPos({x:clawPos.x - speed, y:clawPos.y, z:clawPos.z});
+              }
             }
     
             if(jump){
-                // 隨機變數判斷是否中獎
-                const random = Math.random();
-                const isWin = random < 0.5;
+              // 隨機變數判斷是否中獎
+              const random = Math.random();
+              const win = random < 0.5;
 
-                console.log("is Win?", isWin);
-
-                setIsClawDown(true);
-                gsap.to(clawPos, {y: -0.7, duration: 3, onComplete: ()=>{
-                    gsap.to(clawPos, {y: 0.3, duration: 2, onComplete: ()=>{
-                        setIsClawDown(false);
-                    }});
-                }});
+              setIsClawDown(true);
+              gsap.to(clawPos, {
+                y: -0.7,
+                duration: 3,
+                onComplete: () => {
                 
-                console.log("JUMPPP!");
+                  gsap.to(clawPos, {
+                    y: 0.3,
+                    duration: 2,
+                    onComplete: () => {
+                      setIsClawDown(false);
+                      setIsWin(win); // <-- 設定結果讓主畫面顯示用
+                    },
+                  });
+                },
+              });
             }
 
         }
