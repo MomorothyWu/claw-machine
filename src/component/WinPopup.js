@@ -14,7 +14,7 @@ export default function WinPopup({ isWin, onClose }) {
       >
         <button
           onClick={onClose}
-          className="absolute -bottom-10 right-2/5 w-6 h-6 bg-white border rounded-full flex items-center justify-center shadow hover:bg-gray-100 transition"
+          className="absolute -bottom-12 right-2/5 w-8 h-8 bg-white/80 border rounded-full flex items-center justify-center shadow hover:bg-gray-100 transition"
           aria-label="Close"
         >
           <Image src={cross} alt="close"/>

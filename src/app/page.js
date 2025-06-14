@@ -6,6 +6,7 @@ import ClawCamera from "@/component/ClawCamera";
 import LoginModal from "@/component/LoginModel";
 import WinPopup from "@/component/WinPopup";
 import ExpandableCard from "@/component/ExpandableCard";
+import WinCounter from "@/component/WinCounter";
 
 function ClawModel({clawPos, isClawDown, isWin}){
   const clawModel = useGLTF(`claw.glb`);
@@ -45,14 +46,20 @@ function ClawModel({clawPos, isClawDown, isWin}){
 }
 
 export default function Home() {
+  const counterRef = useRef();
   const [clawPos, setClawPos] = useState({x: 0, y: 0, z: 0});
   const [isClawDown, setIsClawDown] = useState(false);
   const [isWin, setIsWin] = useState(null); // null=未抽, true/false=結果
   const [showPopup, setShowPopup] = useState(false);
+  
 
   useEffect(() => {
     if (isWin !== null) {
       setShowPopup(true);
+
+      if (isWin && counterRef.current) {
+        counterRef.current.increment();
+      }
     }
   }, [isWin]);  
   
@@ -91,6 +98,8 @@ export default function Home() {
           歡迎，{user.displayName}！
         </div>
       )}
+
+      <WinCounter ref={counterRef} />
 
       <ExpandableCard />
 

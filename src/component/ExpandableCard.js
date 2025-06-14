@@ -21,9 +21,11 @@ export default function ExpandableCard() {
       {!expanded && (
         <button
           onClick={() => setExpanded(true)}
-          className="shadow-lg bg-white rounded-full flex items-center justify-center hover:scale-105 transition"
+          className="shadow-lg bg-white border-2 border-[#F56C56] rounded-full text-[#F56C56] font-medium
+          flex items-center justify-center px-4 py-2 hover:scale-105 transition"
         >
-          <Image src="Open.svg" alt="open" width={36} height={36} />
+          <div>遊戲說明</div>
+          <Image src="plus.svg" alt="open" width={32} height={32} />
         </button>
       )}
 
@@ -41,30 +43,30 @@ export default function ExpandableCard() {
               <div className="flex justify-baseline items-center gap-1">
                 <Image src={w} alt="w"/>
                 <Image src={F} alt="f"/>
-                <p className="ml-2">Move Forward</p>
+                <p className="ml-2">向前移動爪子</p>
               </div>
 
               <div className="flex justify-baseline items-center gap-1">
                 <Image src={s} alt="s"/>
                 <Image src={B} alt="b"/>
-                <p className="ml-2">Move Backward</p>
+                <p className="ml-2">向後移動爪子</p>
               </div>
 
               <div className="flex justify-baseline items-center gap-1">
                 <Image src={a} alt="a"/>
                 <Image src={L} alt="l"/>
-                <p className="ml-2">Move Left</p>
+                <p className="ml-2">向左移動爪子</p>
               </div>
 
               <div className="flex justify-baseline items-center gap-1">
                 <Image src={d} alt="d"/>
                 <Image src={R} alt="r"/>
-                <p className="ml-2">Move Right</p>
+                <p className="ml-2">向右移動爪子</p>
               </div>
 
               <div className="flex justify-baseline items-center gap-1">
                 <Image src={space} alt="space"/>
-                <p className="ml-2">Grab</p>
+                <p className="ml-2">下爪！</p>
               </div>
 
             </div>
